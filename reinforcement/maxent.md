@@ -15,12 +15,13 @@
 假设有特征函数$f(\tau)$来表征轨迹
 
 $$
-    \begin{split}
-    \max \limits_{P} & H(P) \\
+    \max \limits_{P}  H(P) 
+$$
+
+$$\begin{split}
     s.t. & \sum P(\tau_i)f(\tau_i) = \tilde{f} \\
          & \sum P(\tau_i) = 1 \tag{1}
-    \end{split}
-$$
+    \end{split}$$
 
 其中$H(p) = -plog(p)$
 
