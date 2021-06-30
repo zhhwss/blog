@@ -18,10 +18,9 @@ $$
     \max \limits_{P}  H(P) 
 $$
 
-$$\begin{split}
-    s.t. & \sum P(\tau_i)f(\tau_i) = \tilde{f} \\
-         & \sum P(\tau_i) = 1 \tag{1}
-    \end{split}$$
+$$
+    s.t. \sum P(\tau_i)f(\tau_i) = \tilde{f}, \sum P(\tau_i) = 1 \tag{1}
+$$
 
 其中$H(p) = -plog(p)$
 
