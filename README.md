@@ -5,3 +5,6 @@
 * [强化学习](./reinforcement/content.md)
   * [Model-based和Model-free](./reinforcement/model_base_free.md)
   * [Markov Decision Processes](./reinforcement/mdp.md)
+  *  逆强化学习
+     * [最大熵](./reinforcement/maxent.md)
+
