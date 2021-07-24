@@ -8,3 +8,6 @@
   *  逆强化学习
      * [最大熵](./reinforcement/maxent.md)
 
+* [统计相关]
+  * [伯努利分布](./statics/bernoulli_distribution.md)
+
