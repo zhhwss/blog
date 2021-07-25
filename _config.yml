@@ -1,8 +1,8 @@
 markdown: kramdown
-# kramdown:
-#     math_engine: katex
+kramdown:
+    math_engine: mathjax
 title: Black's Blog
 theme: jekyll-theme-cayman
-mathjax: true
+# mathjax: true
 author:
   name: Black Zhou
