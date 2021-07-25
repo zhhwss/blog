@@ -1,3 +1,9 @@
+<script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$']]}
+        });
+</script>
+
 ## 逻辑回归
 
 ### 定义
