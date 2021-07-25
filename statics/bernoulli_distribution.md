@@ -1,6 +1,6 @@
 
 <style type="text/css" rel="stylesheet">
-pre {
+code {
 overflow: auto;
 white-space: pre-wrap !important;
 word-wrap: break-word !important;
@@ -38,7 +38,7 @@ $$
 ## 二项分布
 二项分布（Binomial Distribution）也是一种**离散型概率分布**，又称为「n 重伯努利分布」。其定义如下
 
-```latex
+```
 如果随机变量序列 X_n(n=1, 2, …) 中的随机变量均服从与参数为 p 的伯努利分布，那么随机变量序列 X_n 就形成了参数为 p 的 n 重伯努利试验。例如，假定重复抛掷一枚均匀硬币 n 次，如果在第 i 次抛掷中出现正面，令 X_i=1；如果出现反面，则令 X_i=0。那么，随机变量 X_n(n=1, 2, …) 就形成了参数为 1/2 的 n 重伯努利试验。
 ```
 
