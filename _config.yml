@@ -1,4 +1,6 @@
 markdown: kramdown
+kramdown:
+    math_engine: null
 title: Black's Blog
 theme: jekyll-theme-cayman
 # mathjax: true
