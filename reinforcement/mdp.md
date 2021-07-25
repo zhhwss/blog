@@ -1,8 +1,21 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+    	MathJax.Hub.Config({tex2jax: {
+             inlineMath: [['$','$']],
+             displayMath: [["\\(","\\)"],["\\[","\\]"]],
+             processEscapes: true
+           }
+         });
+    </script>
+</head>
+
 ## 马尔可夫决策过程（Markov Decision Processes,MDPs）
 
 MDPs 简单说就是一个智能体（Agent）采取行动（Action）从而改变自己的状态（State）获得奖励（Reward）与环境（Environment）发生交互的循环过程。
 
 MDP 的策略完全取决于当前状态（Only present matters），这也是它马尔可夫性质的体现，即MDP的下一个状态只与当前状态有关。
+
 
 
 ![](images/2021-06-29-19-12-20.png)
