@@ -1,7 +1,8 @@
 
 title: Black's Blog
 theme: jekyll-theme-cayman
-mathjax: true
+# mathjax: true
+mathjax: https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js
 
 author:
   name: Black Zhou
