@@ -1,8 +1,7 @@
-
+markdown: kramdown
 title: Black's Blog
 theme: jekyll-theme-cayman
 # mathjax: true
 # mathjax: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js
-katex: true
 author:
   name: Black Zhou
