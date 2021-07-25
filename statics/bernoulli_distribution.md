@@ -29,7 +29,7 @@ $$
     Var(x) = E[(x-E(x))^2]=(1-p)^2 \times p + (0-p)^2 \times (1-p) = p(1-p)
 $$
 
-**成功（出现1值）的平均次数为**
+**成功（出现1值）1次需要实验的平均次数为**
 
 $$
 n=1\times p + 2\times (1-p)p+ 3\times (1-p)^2p+\dots=\sum_{i=1}^{\infty}i\times(1-p)^{i-1}p=\frac{1}{p}
