@@ -37,7 +37,7 @@ $$
 $$
 在给定参数$\theta$下的概率为:
 $$
-    P(D|\theta)=\prod_{1}^N h_\theta(x_i)^{y_i}(1-h_\theta(x_i))^{1-y_i}
+    P(D|\theta)=\prod_{i=1}^N h_\theta(x_i)^{y_i}(1-h_\theta(x_i))^{1-y_i}
 $$
 
 -  逻辑回归中采用sigmoid的函数表征$x\rightarrow p$的映射,即
