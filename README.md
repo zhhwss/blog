@@ -2,6 +2,7 @@
 
 * 机器学习
   * [逻辑回归](./ml/lr.md)
+  * [最大熵模型](./ml/maxent.md)
 
 * [强化学习](./reinforcement/content.md)
   * [Model-based和Model-free](./reinforcement/model_base_free.md)
