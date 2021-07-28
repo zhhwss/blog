@@ -81,12 +81,12 @@ $$
 其中,
 $$
     \begin{split}
-        R_{\psi}(\tau) &=\sum_j^n \lambda_j f_j(\tau)\\
+        R_{\psi}(\tau) &=\sum_j^n \lambda_j f_j(\tau) = \sum_j^n \lambda_j \sum_{s_i \in \tau}f_{j_{s_i}}=\sum_{s_i \in \tau}\sum_j^n \lambda_j f_{j_{s_i}}=\sum_{s_i \in \tau} r_{\psi}(s_i)\\
         S&=\int R_{\psi}(\tau) d\tau
     \end{split}
 $$
-${\lambda_1,\cdots}$是函数$R_{\psi}(\tau)$的参数。
-因此，优化问题也变为如下形式:
+${\lambda_1,\cdots}$是函数$R_{\psi}(\tau)$的参数, $r_{\psi}(s_i)$是state $s_i$的reward。
+优化问题也变为如下形式:
 
 $$
     \max\limits_{\psi} \sum_{\tau \in D} log p_{r_{\psi}}(\tau)
