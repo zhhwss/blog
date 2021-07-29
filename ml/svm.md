@@ -148,3 +148,57 @@ $$
 \end{aligned}
 $$
 此时需要求解$\alpha$，**同样利用SMO（序列最小优化）算法。**
+
+### 核函数
+为什么要引入核函数：
+`
+当样本在原始空间线性不可分时，可将样本从原始空间映射到一个更高维的特征空间，使得样本在这个特征空间内线性可分。而引入这样的映射后，所要求解的对偶问题的求解中，无需求解真正的映射函数，而只需要知道其核函数。
+`
+#### 核函数的定义
+$$
+    \kappa(x,y)=<\phi(x),\phi(y)>
+$$
+一方面数据变成了高维空间中线性可分的数据，另一方面不需要求解具体的映射函数，只需要给定具体的核函数即可，这样使得求解的难度大大降低。其中$\phi(x)$是$x\rightarrow\phi(x)$高维空间的映射。核函数可以省掉这个映射的过程。下面，我们以RBF kernel为例。定义映射$\phi$为如下形式，
+$$
+\phi: x \mapsto \exp \left(-x^{2}\right)\left[\begin{array}{c}
+1 \\
+\sqrt{\frac{2}{1}} x \\
+\sqrt{\frac{2^{2}}{2 !}} x^{2} \\
+\vdots
+\end{array}\right]
+$$
+对应如下核函数形式：
+$$
+\kappa\left(x_{i}, x_{j}\right):=\exp \left(-\left(x_{i}-x_{j}\right)^{2}\right)
+$$
+证明：
+$$
+\begin{aligned}
+\kappa\left(x_{i}, x_{j}\right) &=\exp \left(-\left(x_{i}-x_{j}\right)^{2}\right) \\
+&=\exp \left(-x_{i}^{2}\right) \exp \left(-x_{j}^{2}\right) \exp \left(2 x_{i} x_{j}\right) \\
+&=\exp \left(-x_{i}^{2}\right) \exp \left(-x_{j}^{2}\right) \sum_{k=0}^{\infty} \frac{\left(2 x_{i} x_{j}\right)^{k}}{k !} \\
+&=\sum_{k=0}^{\infty}\left(\exp \left(-x_{i}^{2}\right) \sqrt{\frac{2^{k}}{k !}} x_{i}^{k}\right)\left(\exp \left(-x_{j}^{2}\right) \sqrt{\frac{2^{k}}{k !}} x_{j}^{k}\right) \\
+&=\phi\left(x_{i}\right)^{\top} \boldsymbol{\phi}\left(x_{j}\right)
+\end{aligned}
+$$
+**核函数就是一个函数，接收两个变量，这两个变量是在低维空间中的变量，而核函数求的值等于将两个低维空间中的向量映射到高维空间后的内积。**
+
+#### 如何确定一个函数是核函数
+根据内积的性质，它要满足
+- 交换律
+- 内积大于等于0
+
+因此核函数也要满足上述性质即
+- $\kappa(x_i,x_j)=\kappa(x_j,x_i)$
+- $\kappa(x_i,x_j)\ge0,\forall x_i, x_j$
+
+常用的核函数及其特性如下表所示：
+![](images/2021-07-29-19-27-52.png)
+
+#### 如何选择核函数
+
+- 当特征维数 d 超过样本数 m 时 (文本分类问题通常是这种情况), 使用线性核;
+- 当特征维数 d 比较小. 样本数 m 中等时, 使用RBF核;
+- 当特征维数 d 比较小. 样本数 m 特别大时, 支持向量机性能通常不如深度神经网络
+
+### 知识点
