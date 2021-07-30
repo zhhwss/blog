@@ -20,7 +20,7 @@ $$
 $$
 其中：
 $$
-    \mu(\pi)=E_{s_0\sim D}[\sum_{t=0}^{\infty}\gamma^t \phi({s_t})|\pi]
+    \mu(\pi)=E_{s_0\sim D}[\sum_{t=1}^{\infty}\gamma^{t-1} \phi({s_t})|\pi]
 $$ 
 是策略$\phi$的特征期望。策略$\phi$的的值函数，可以简化为：
 $$
@@ -28,7 +28,7 @@ $$
 $$
 给定m条专家轨迹，我们可以估计专家轨迹的特征期望为：
 $$
-    \hat{\mu}_E=\frac{1}{|D^*|}\sum_{\tau \in D^*} [\sum_{t=0}^{\infty}\gamma^t \phi({s_t^{\tau}})]
+    \hat{\mu}_E=\frac{1}{|D^*|}\sum_{\tau \in D^*} [\sum_{t=1}^{\infty}\gamma^{t-1} \phi({s_t^{\tau}})]
 $$
 **学徒学习的优化目标就是寻找一个$\tilde{\pi}$，使得特征期望在专家轨迹附近，并且专家轨迹的值函数比其他策略包括$\tilde{\pi}$要尽量大。**
 问题可以进一步转化为：
@@ -41,8 +41,8 @@ $$
 其中$\min$步骤是搜索已有策略中离专家轨迹最近的最近的策略，$\max$是调整优化值函数拉开专家轨迹与所求的策略的差距。上述优化问题可以转化为如下形式：
 $$
     \begin{split}
-        \max\limits_{w}& t \\
-        s.t. w\cdot\mu_E>= w\cdot\mu(\pi_j)+t&, j\in{\{0,1,\dots\}}\\
+        \max\limits_{w}&\quad t \\
+        s.t.\quad w\cdot\mu_E>= w\cdot\mu(\pi_j)+t&, j\in{\{0,1,\dots\}}\\
         ||w||_2 <=1&
     \end{split}
 $$

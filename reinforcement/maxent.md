@@ -126,3 +126,129 @@ $$
 ![](images/2021-06-30-17-19-48.png)
 
 ![](images/2021-06-30-17-20-41.png)
+
+### 实际实现
+其中`feature_expectations - feature_matrix.T.dot(expected_svf)`即为$\triangledown_{\psi} L$
+- $\frac{\partial r_{\psi}}{\partial \psi}=\frac{\partial r_{\psi}}{\partial \lambda}=[f_i,\dots]\in R^n$
+- $\triangledown_{\psi} L$ = $(E_D(f) - E_\pi (f))\cdot f$，即每个特征函数在专家轨迹和策略轨迹上平均值的差乘以它本身
+
+可以这么理解梯度更新方向，
+- 对于特征函数出次数专家轨迹大于策略轨迹的，让它的Reward变大
+- 对于于特征函数出次数专家轨迹小于策略轨迹的，让它的Reward变小
+
+
+```python
+# state个数，state维度
+# feature_matrix 每一行表示一个状态
+n_states, d_states = feature_matrix.shape
+
+# Initialise weights.
+alpha = rn.uniform(size=(d_states,))
+
+# Calculate the feature expectations \tilde{phi}(f).
+# 求专家轨迹的平均特征表示
+feature_expectations = find_feature_expectations(feature_matrix,
+                                                  trajectories)
+
+# Gradient descent on alpha.
+for i in range(epochs):
+    # print("i: {}".format(i))
+    r = feature_matrix.dot(alpha)
+    # 求策略轨迹的平均特征表示
+    expected_svf = find_expected_svf(n_states, r, n_actions, discount,
+                                      transition_probability, trajectories)
+    grad = feature_expectations - feature_matrix.T.dot(expected_svf)
+
+    alpha += learning_rate * grad
+
+
+def find_svf(n_states, trajectories):
+    """
+    Find the state visitation frequency from trajectories.
+
+    n_states: Number of states. int.
+    trajectories: 3D array of state/action pairs. States are ints, actions
+        are ints. NumPy array with shape (T, L, 2) where T is the number of
+        trajectories and L is the trajectory length.
+    -> State visitation frequencies vector with shape (N,).
+    """
+
+    svf = np.zeros(n_states)
+
+    for trajectory in trajectories:
+        for state, _, _ in trajectory:
+            svf[state] += 1
+
+    svf /= trajectories.shape[0]
+
+    return svf
+
+def find_feature_expectations(feature_matrix, trajectories):
+    """
+    Find the feature expectations for the given trajectories. This is the
+    average path feature vector.
+
+    feature_matrix: Matrix with the nth row representing the nth state. NumPy
+        array with shape (N, D) where N is the number of states and D is the
+        dimensionality of the state.
+    trajectories: 3D array of state/action pairs. States are ints, actions
+        are ints. NumPy array with shape (T, L, 2) where T is the number of
+        trajectories and L is the trajectory length.
+    -> Feature expectations vector with shape (D,).
+    """
+
+    feature_expectations = np.zeros(feature_matrix.shape[1])
+
+    for trajectory in trajectories:
+        for state, _, _ in trajectory:
+            feature_expectations += feature_matrix[state]
+
+    feature_expectations /= trajectories.shape[0]
+
+    return feature_expectations
+
+def find_expected_svf(n_states, r, n_actions, discount,
+                      transition_probability, trajectories):
+    """
+    Find the expected state visitation frequencies using algorithm 1 from
+    Ziebart et al. 2008.
+
+    n_states: Number of states N. int.
+    alpha: Reward. NumPy array with shape (N,).
+    n_actions: Number of actions A. int.
+    discount: Discount factor of the MDP. float.
+    transition_probability: NumPy array mapping (state_i, action, state_k) to
+        the probability of transitioning from state_i to state_k under action.
+        Shape (N, A, N).
+    trajectories: 3D array of state/action pairs. States are ints, actions
+        are ints. NumPy array with shape (T, L, 2) where T is the number of
+        trajectories and L is the trajectory length.
+    -> Expected state visitation frequencies vector with shape (N,).
+    """
+
+    n_trajectories = trajectories.shape[0]
+    trajectory_length = trajectories.shape[1]
+
+    # policy = find_policy(n_states, r, n_actions, discount,
+    #                                 transition_probability)
+    policy = value_iteration.find_policy(n_states, n_actions,
+                                         transition_probability, r, discount)
+
+    start_state_count = np.zeros(n_states)
+    for trajectory in trajectories:
+        start_state_count[trajectory[0, 0]] += 1
+    p_start_state = start_state_count/n_trajectories
+
+    expected_svf = np.tile(p_start_state, (trajectory_length, 1)).T
+    for t in range(1, trajectory_length):
+        expected_svf[:, t] = 0
+        for i, j, k in product(range(n_states), range(n_actions), range(n_states)):
+            expected_svf[k, t] += (expected_svf[i, t-1] *
+                                  policy[i, j] * # Stochastic policy
+                                  transition_probability[i, j, k])
+
+    return expected_svf.sum(axis=1)
+
+
+```
+
