@@ -4,6 +4,7 @@
   * [逻辑回归](./ml/lr.md)
   * [最大熵模型](./ml/maxent.md)
   * [SVM](./ml/svm.md)
+  * [树模型](./ml/tree.md)
 
 * [强化学习](./reinforcement/content.md)
   * [Model-based和Model-free](./reinforcement/model_base_free.md)
