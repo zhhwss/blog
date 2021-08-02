@@ -44,11 +44,11 @@ graph TD;
 
 
 ### 定义
-- 设训练数据集$D$, $|D|$表示样本个数。
-- 设有K个类$C_k$,k=1,2,...,K , 有:  $\sum_{k} \left|C_k \right| = \left|D \right|$
-- 设特征A有n个不同的取值 $\{a_1, a_2, \cdots, a_n\}$ , 根
-- 据特征A的取值将$D$划分为n个子集$D_1,D_2,\cdots,D_n$  ,有: $\sum_i \left|D_i\right|=\left|D\right|$
-- 记子集中$D_i$属于类$C_k$的样本的集合为$D_{ik}$
+* 设训练数据集$D$, $|D|$表示样本个数。
+* 设有K个类$C_k$,k=1,2,...,K , 有:  $\sum_{k} \left|C_k \right| = \left|D \right|$
+* 设特征A有n个不同的取值 $\{a_1, a_2, \cdots, a_n\}$ , 根
+* 据特征A的取值将$D$划分为n个子集$D_1,D_2,\cdots,D_n$  ,有: $\sum_i \left|D_i\right|=\left|D\right|$
+* 记子集中$D_i$属于类$C_k$的样本的集合为$D_{ik}$
 
 ### ID3 和 信息增益
 信息熵：随机变量不确定性的度量, 数据集$D$的信息熵定义如下 :
