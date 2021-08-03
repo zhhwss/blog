@@ -1,3 +1,16 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+    	MathJax.Hub.Config({tex2jax: {
+             inlineMath: [['$','$']],
+             displayMath: [["\\(","\\)"],["\\[","\\]"]],
+             processEscapes: true
+           }
+         });
+    </script>
+</head>
+
+## 逆强化学习
 ### 定义
 
 轨迹定义: $\tau=\{s_1,a_1,\cdots,s_t,a_t,\cdots\}$

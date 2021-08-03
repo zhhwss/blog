@@ -1,3 +1,15 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+    	MathJax.Hub.Config({tex2jax: {
+             inlineMath: [['$','$']],
+             displayMath: [["\\(","\\)"],["\\[","\\]"]],
+             processEscapes: true
+           }
+         });
+    </script>
+</head>
+
 ## deep maxent
 在[maxent](./maxent.md)中，Reward函数定义为:
 $$
