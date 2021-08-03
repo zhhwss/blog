@@ -5,6 +5,9 @@
   * [最大熵模型](./ml/maxent.md)
   * [SVM](./ml/svm.md)
   * [树模型](./ml/tree.md)
+* 深度学习
+  * [Batch Normalization](./deeplearning/bn.md)
+  * [Residual Network](./deeplearning/residualnet.md)
 
 * [强化学习](./reinforcement/content.md)
   * [Model-based和Model-free](./reinforcement/model_base_free.md)
