@@ -1,3 +1,15 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+    	MathJax.Hub.Config({tex2jax: {
+             inlineMath: [['$','$']],
+             displayMath: [["\\(","\\)"],["\\[","\\]"]],
+             processEscapes: true
+           }
+         });
+    </script>
+</head>
+
 ## Batch Normalization
 输入数据Normalization：
 - Normalization 即将数据规范化，一般是将数据映射到指定的范围，用于去除不同维度数据的量纲以及量纲单位。这样可以去除因为量纲以及量纲单位导致模型对数据中某些特征的倾向。
