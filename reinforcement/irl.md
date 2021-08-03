@@ -74,10 +74,12 @@ $$
 $$
      E_{\tau \sim D^*}(\sum_{s_t \in \tau}\gamma^{t-1}r(s_t)) = W^T E_{\tau \sim D^*}(\sum_{s_t \in \tau}\gamma^{t-1}\phi(s_t)) = W^T\hat{\mu}_E
 $$
-其中，$\hat{\mu}_E=\frac{1}{|D^*|}\sum_{\tau \in D^*} [\sum_{t=1}^{\infty}\gamma^{t-1} \phi({s_t^{\tau}})]$ 是专家轨迹的特征期望。
+其中, $\hat{\mu}_E=\frac{1}{|D^*|}\sum_{\tau \in D^*} [\sum_{t=1}^{\infty}\gamma^{t-1} \phi({s_t^{\tau}})]$是专家轨迹的特征期望。
+
 $$
     E_{\pi}(\sum_{s_t \sim \pi}\gamma^{t-1}r(s_t))=W^TE_{\pi}(\sum_{s_t \sim \pi}\gamma^{t-1}\phi(s_t)) = W^T \cdot \mu(\pi)
 $$
+
 其中，$\mu(\pi)=E_{\pi}(\sum_{s_t \sim \pi}\gamma^{t-1}\phi(s_t))$是策略$\pi$的特则期望。
 
 **学徒学习的优化目标就是寻找一个$\tilde{\pi}$，使得特征期望在专家轨迹附近，并且专家轨迹的值函数比其他策略包括$\tilde{\pi}$要尽量大。**
