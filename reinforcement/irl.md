@@ -13,11 +13,11 @@
 ## 逆强化学习
 ### 定义
 
-轨迹定义: $\tau=\{s_1,a_1,\cdots,s_t,a_t,\cdots\}$
-专家轨迹: $D^*=\{\tau^*\}\sim \pi^*$
-state $s$的特征函数表示：$\phi({s})\in R^n$，n是特征函数个数
-reward函数为: $r(s)=\psi(\phi({s}))\in R$
-对于轨迹$\tau$的总回报为$R(\tau)=\sum_{t\in \tau}\gamma^{t-1}r(s_t)$
+- 轨迹定义: $\tau=\{s_1,a_1,\cdots,s_t,a_t,\cdots\}$ 
+- 专家轨迹: $D^*=\{\tau^*\}\sim \pi^*$ 
+- state $s$的特征函数表示：$\phi({s})\in R^n$，n是特征函数个数 
+- reward函数为: $r(s)=\psi(\phi({s}))\in R$ 
+- 对于轨迹$\tau$的总回报为$R(\tau)=\sum_{t\in \tau}\gamma^{t-1}r(s_t)$ 
 
 ### 逆强化学习问题定义
 逆强化学习的目标是找到reward函数为: $r(s)=\psi(\phi({s_t}))\in R$，使得专家轨迹的$R(\tau)=\sum_{t=1}\gamma^{t-1}r(s)$最优，即
