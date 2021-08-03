@@ -16,10 +16,10 @@
 
 ### 定义
 
-轨迹定义: $\tau=\{s_1,a_1,\cdots,s_t,a_t,\cdots\}$
-专家轨迹: $D^*=\{\tau\}\sim \pi^*$
-state $s$的特征函数表示：$\phi({s})\in R^n$，n是特征函数个数
-未知的reward函数为: $R(s)=w \phi({s})$
+- 轨迹定义: $\tau=\{s_1,a_1,\cdots,s_t,a_t,\cdots\}$
+- 专家轨迹: $D^*=\{\tau\}\sim \pi^*$
+- state $s$的特征函数表示：$\phi({s})\in R^n$，n是特征函数个数
+- 未知的reward函数为: $R(s)=w \phi({s})$
 
 ### 问题定义
 根据上述定义，策略$\phi$的的值函数为：

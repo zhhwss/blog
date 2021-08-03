@@ -14,11 +14,11 @@
 
 ### 定义
 
-轨迹定义: $\tau=\{s_1,a_1,\cdots,s_t,a_t,\cdots\}$
-专家轨迹: $D=\{\tau\}\sim \pi^*$
-state $s_t$的特征函数表示：$f_{s_t}\in R^n$, n表示有n个特征函数
-对于一条轨迹，它的特征函数表示为其轨迹上state的特征表示和：$f(\tau)=\sum f_{s_t}$
-轨迹出现的概率: $P(\tau)$
+- 轨迹定义: $\tau=\{s_1,a_1,\cdots,s_t,a_t,\cdots\}$
+- 专家轨迹: $D=\{\tau\}\sim \pi^*$
+- state $s_t$的特征函数表示：$f_{s_t}\in R^n$, n表示有n个特征函数
+- 对于一条轨迹，它的特征函数表示为其轨迹上state的特征表示和：$f(\tau)=\sum f_{s_t}$
+- 轨迹出现的概率: $P(\tau)$
 
 ### 问题定义
 
