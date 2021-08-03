@@ -13,6 +13,7 @@
   * [Model-based和Model-free](./reinforcement/model_base_free.md)
   * [Markov Decision Processes](./reinforcement/mdp.md)
   *  逆强化学习
+     * [逆强化学习总结](./reinforcement/irl.md) 
      * [学徒学习](./reinforcement/apprenticeship.md) 
      * [最大熵逆强化学习](./reinforcement/maxent.md)
 
