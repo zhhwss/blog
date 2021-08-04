@@ -45,7 +45,7 @@ $$
 $$
 其中$x_j$是连续特征。下图所示就是一个典型的DNN模型。
 
-<image src="./images/2021-08-04-15-52-29.png" width=400>
+<p><image src="./images/2021-08-04-15-52-29.png" width=400></p>
 
 
 ### Wide & Deep
