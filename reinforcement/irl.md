@@ -74,7 +74,7 @@ $$
 $$
      E_{\tau \sim D^e}(\sum_{s_t \in \tau}\gamma^{t-1}r(s_t)) = W^T E_{\tau \sim D^e}(\sum_{s_t \in \tau}\gamma^{t-1}\phi(s_t)) = W^T\hat{\mu}_E
 $$
-其中, $\hat{\mu}_E=\frac{1}{|D^e|}\sum_{\tau \in D^e} [\sum_{t=1}^{\infty}\gamma^{t-1} \phi({s_t^{\tau}})]$是专家轨迹的特征期望。
+其中, $\hat{\mu}_{E}=\frac{1}{|D^e|}\sum_{\tau \in D^e} [\sum_{t=1}^{\infty}\gamma^{t-1} \phi({s_t^{\tau}})]$是专家轨迹的特征期望。
 
 $$
     E_{\pi}(\sum_{s_t \sim \pi}\gamma^{t-1}r(s_t))=W^TE_{\pi}(\sum_{s_t \sim \pi}\gamma^{t-1}\phi(s_t)) = W^T \cdot \mu(\pi)
