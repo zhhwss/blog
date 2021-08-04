@@ -51,7 +51,7 @@ $$
 ### Wide & Deep
 Wide & Deep 是Google 2016年提出的用于表数据的经典模型，该模型将DNN学习到的高阶特征表示、原始特征和专家构造的特征拼到一起，直接预测最终结果，如下图所示：
 
-<image src="images/2021-08-04-15-58-45.png" width=500>
+<p><image src="images/2021-08-04-15-58-45.png" width=500></p>
 
 
 
