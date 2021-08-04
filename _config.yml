@@ -7,11 +7,13 @@ theme: jekyll-theme-cayman
 author:
   name: Black Zhou
 # Where things are
+plugins:
+  - jekyll-spaceship
 jekyll-spaceship:
   # default enabled processors
   processors:
-    - table-processor
     - mathjax-processor
+    - table-processor
     - plantuml-processor
     - mermaid-processor
     - polyfill-processor
