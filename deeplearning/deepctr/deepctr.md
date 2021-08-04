@@ -27,3 +27,23 @@ $$
     P(Y=1|X)=\sigma(W_{wide}^T[X, \phi(X)] + W_{deep}^TDNN(X) + b)
 $$
 其中, $\phi(X)$是专家构造的特征, $DNN(X)$是DNN学习到的高阶特征表示，$X$是原始特征。
+这里，Wide部分和Deep部分可以用不同的优化器来联合训练。例如，Wide部分用FTRL，Deep部分用adam。
+目前主流的DeepCTR模型都是Wide & Deep模式，即用一个FM、CIN等网络替换Wide部分。
+
+### DeepFM
+DeepFM是将FM模块和Deep模块并联到一起，如下图所示：
+![](images/2021-08-04-16-55-14.png)
+FM是用来表征Field之间内积的网络表征方式，定义如下:
+$$
+    y_{FM}= w_0 + \mathbf{w_1}^T \mathbf{X} + \sum_{i=1}^{n-1}\sum_{j=i+1}^{n} <\mathbf{e_i}, \mathbf{e_j}>
+$$
+其中, $\mathbf{X}=concat([\mathbf{x_i}\cdots x_j\cdots])$是离散特征one-hot和连续特征拼接的结果，$e_i$和$e_j$是embedding 向量。
+这里，很容易发现FM不能学到连续特征之间以及连续特征与离散特征之间的交互。一个简单的办法是将连续特征离散化后使用DeepFM，或者可通过一个映射矩阵，将连续特征映射到同embedding 向量相同的维度，如下：
+$$
+    \mathbf{e_j} = x_j \mathbf{V}_j
+$$
+其中，$\mathbf{V}_j$即为映射向量。
+DeepFM的最终预测为:
+$$
+    \hat{y}=\sigma(y_{DNN} + y_{FM})
+$$
