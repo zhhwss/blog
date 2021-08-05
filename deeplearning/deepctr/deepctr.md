@@ -92,7 +92,7 @@ Interacting层是AutoInt的核心，它使用经典的 Multi-head Self-Attention
 
 ![](images/2021-08-04-18-04-33.png)
 
-每个Attention head 都对应着三个转换矩阵$\mathbf{W}_{query}$,$\mathbf{W}_{key}$,$\mathbf{W}_{value}\in R^{d'\times d}$,对于第 h 个 Attention head，当第 m 个嵌入向量$\mathbf{e}_{m}$作为query时，其对应输出$\tilde{\boldsymbol{e}}_{m}^{(h)}$为：
+每个Attention head 都对应着三个转换矩阵$\mathbf{W}_{query},\mathbf{W}_{key},\mathbf{W}_{value}\in R^{d'\times d}$,对于第 h 个 Attention head，当第 m 个嵌入向量$\mathbf{e}_{m}$作为query时，其对应输出$\tilde{\boldsymbol{e}}_{m}^{(h)}$为：
 $$
 \begin{gathered}
 \alpha_{m, k}^{(h)}=\frac{\exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{k}\right)\right)}{\sum_{l=1}^{M} \exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{l}\right)\right)} \\
