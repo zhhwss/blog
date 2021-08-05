@@ -1,3 +1,9 @@
+---
+layout: home
+---
+
+
+
 ## My Blog
 
 * 机器学习
