@@ -17,6 +17,7 @@
   - [AutoInt](#autoint)
   - [DeepCross](#deepcross)
   - [XDeepFM](#xdeepfm)
+  - [NFM](#nfm)
 
 ## DeepCTR
 在DeepCTR模型通常应用于表数据场景，该场景通常由离散特征和连续特征组成。如下图所示，每一行表示一个样本，每一列表示特征。机器学习任务就是要根据特征x预测目标y。其中离散特征一般用one-hot encoding处理，连续特征用归一化处理。然而在实际应用中，例如CTR预测场景，离散特征可能包含了上百万的不同值，这也就导致了one-hot vector是高纬稀疏的，进而特征向量x也是高纬稀疏的。
@@ -168,3 +169,11 @@ $$
 ![](images/2021-08-04-19-38-55.png)
 
 最终,$\boldsymbol{X}^1,\cdots,\boldsymbol{X}^k$在$D$维上求sum 然后concat 起来，即为CIN的输出。
+
+### NFM
+Neural Factorization Machines结构如下图所示，其核心点是Bi-Interaction Pooling 层。该层本质上还是FM，与传统FM不同的是，它并灭有将最终结果压缩成一个标量，而是保持向量形式出入到随后的DNN中。Bi-Interaction Pooling 可表示为：
+$$
+    F_{BI}(\mathbf{X})=\sum_{i=1}^{n-1}\sum_{j=i+1}^{n} \mathbf{e_i} \odot \mathbf{e_j}
+$$
+对比原始FM，这里主要区别就是求的Hadamard乘积而非内积。此外NFM论文还提到对embedding层用FM来训练初始化，可以显著提高训练效率和模型最终性能。
+![](images/2021-08-05-11-34-22.png)
