@@ -99,7 +99,7 @@
 <p><img src="/blog/deeplearning/deepctr/images/2021-08-04-15-58-45.png" alt=""></p>
 
 <p>其定义如下：
-\(P\(Y=1|X)=\sigma\(W\_{wide}^T\[X, \phi\(X)] + W\_{deep}^TDNN\(X) + b)\)
+\(P(Y=1|X)=\sigma(W_{wide}^T\[X, \phi\(X)] + W_{deep}^TDNN(X) + b)\)
 其中, $\phi(X)$是专家构造的特征, $DNN(X)$是DNN学习到的高阶特征表示，$X$是原始特征。
 这里，Wide部分和Deep部分可以用不同的优化器来联合训练。例如，Wide部分用FTRL，Deep部分用adam。
 目前主流的DeepCTR模型都是Wide &amp; Deep模式，即用一个FM、CIN等网络替换Wide部分。</p>
