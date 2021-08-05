@@ -14,7 +14,9 @@ layout: home
 * 深度学习
   * [Batch Normalization](./deeplearning/bn.md)
   * [Residual Network](./deeplearning/residualnet.md)
-  * [DeepCTR](./deeplearning/deepctr/deepctr.md)
+  * DeepCTR
+    * [DeepCTR简介](./deeplearning/deepctr/deepctr.md)
+    * [NON](./deeplearning/deepctr/deepctr.md)
 
 * [强化学习](./reinforcement/content.md)
   * [Model-based和Model-free](./reinforcement/model_base_free.md)
