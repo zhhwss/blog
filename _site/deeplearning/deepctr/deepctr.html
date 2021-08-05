@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Black’s Blog | Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</title>
+<meta name="generator" content="Jekyll v4.2.0">
+<meta property="og:title" content="Black’s Blog">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.">
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.">
+<link rel="canonical" href="/deeplearning/deepctr/deepctr.html">
+<meta property="og:url" content="/deeplearning/deepctr/deepctr.html">
+<meta property="og:site_name" content="Black’s Blog">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="Black’s Blog">
+<script type="application/ld+json">
+{"description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Black’s Blog","url":"/deeplearning/deepctr/deepctr.html","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css">
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Black's Blog">
+<script>MathJax={"tex":{"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"svg":{"fontCache":"global"}}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site-header" role="banner">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/">Black's Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+    	MathJax.Hub.Config({tex2jax: {
+             inlineMath: [['$','$']],
+             displayMath: [["\\(","\\)"],["\\[","\\]"]],
+             processEscapes: true
+           }
+         });
+    </script>
+
+
+<ul>
+  <li>
+<a href="#deepctr">DeepCTR</a>
+    <ul>
+      <li><a href="#embedding-vector">Embedding Vector</a></li>
+      <li><a href="#wide--deep">Wide &amp; Deep</a></li>
+      <li><a href="#deepfm">DeepFM</a></li>
+      <li><a href="#deepcross">DeepCross</a></li>
+      <li><a href="#nfm">NFM</a></li>
+      <li><a href="#autoint">AutoInt</a></li>
+      <li><a href="#xdeepfm">XDeepFM</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="deepctr">DeepCTR</h2>
+<p>在DeepCTR模型通常应用于表数据场景，该场景通常由离散特征和连续特征组成。如下图所示，每一行表示一个样本，每一列表示特征。机器学习任务就是要根据特征x预测目标y。其中离散特征一般用one-hot encoding处理，连续特征用归一化处理。然而在实际应用中，例如CTR预测场景，离散特征可能包含了上百万的不同值，这也就导致了one-hot vector是高纬稀疏的，进而特征向量x也是高纬稀疏的。</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-11-33-25.png" alt=""></p>
+
+<p><strong>应用深度神经网络到该领域首先要解决的就是离散变量高维稀疏问题</strong>。</p>
+
+<h3 id="embedding-vector">Embedding Vector</h3>
+<p>Deep模型能在CTR领域应用的最重要技术之一就是Embedding，Embedding技术可以将高纬稀疏的离散特征映射成低纬的稠密向量，如下图所示：</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-15-32-06.png" alt=""></p>
+
+<p>其定义如下 ：
+\(\mathbf{e}_i =  \mathbf{W}_i \mathbf{x}_i \tag{1}\)
+其中，$\mathbf{x}_i\in R^n$是one-hot向量（在多值field时为multi-hot向量）, $\mathbf{W}_i\in R^{n\times d}$是embedding矩阵, $\mathbf{e}_i\in R^d$是embedding向量，n是field $i$中不同值的个数, d是embedding factor。实际上，公式(1)也可以被看作是取出矩阵$\mathbf{W}_i$的第$x_i$列。</p>
+
+<p>此时，可以将离散变量的embedding向量和连续变量concat起来作为上层DNN的输入。即
+\(\mathbf{X}_{dnn} = concat([\mathbf{e}_i,\cdots, x_j\cdots])\)
+其中$x_j$是连续特征。下图所示就是一个典型的DNN模型。</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-15-52-29.png" alt=""></p>
+
+<h3 id="wide--deep">Wide &amp; Deep</h3>
+<p>Wide &amp; Deep 是Google 2016年提出的用于表数据的经典模型，该模型将DNN学习到的高阶特征表示、原始特征和专家构造的特征拼到一起，直接预测最终结果，如下图所示：</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-15-58-45.png" alt=""></p>
+
+<p>其定义如下：
+\(P\(Y=1|X)=\sigma\(W\_{wide}^T\[X, \phi\(X)] + W\_{deep}^TDNN\(X) + b)\)
+其中, $\phi(X)$是专家构造的特征, $DNN(X)$是DNN学习到的高阶特征表示，$X$是原始特征。
+这里，Wide部分和Deep部分可以用不同的优化器来联合训练。例如，Wide部分用FTRL，Deep部分用adam。
+目前主流的DeepCTR模型都是Wide &amp; Deep模式，即用一个FM、CIN等网络替换Wide部分。</p>
+
+<h3 id="deepfm">DeepFM</h3>
+<p>DeepFM是将FM模块和Deep模块并联到一起，如下图所示：</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-16-55-14.png" alt=""></p>
+
+<p>FM是用来表征Field之间内积的网络表征方式，定义如下:
+\(y_{FM}= w_0 + \mathbf{w_1}^T \mathbf{X} + \sum_{i=1}^{n-1}\sum_{j=i+1}^{n} &lt;\mathbf{e_i}, \mathbf{e_j}&gt;\)
+其中, $\mathbf{X}=concat([\mathbf{x_i}\cdots x_j\cdots])$是离散特征one-hot和连续特征拼接的结果，$e_i$和$e_j$是embedding 向量。
+这里，很容易发现FM不能学到连续特征之间以及连续特征与离散特征之间的交互。一个简单的办法是将连续特征离散化后使用DeepFM，或者可通过一个映射矩阵，将连续特征映射到同embedding 向量相同的维度，如下：
+\(\mathbf{e_j} = x_j \mathbf{V}_j\)
+其中，$\mathbf{V}_j$即为映射向量。
+DeepFM的最终预测为:
+\(\hat{y}=\sigma(y_{DNN} + y_{FM})\)</p>
+
+<h3 id="deepcross">DeepCross</h3>
+<p>DeepCross的网络结构如下图所示，核心点是左边分支的Cross network</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-19-08-32.png" alt=""></p>
+
+<p>首先
+\(\mathbf{x}_0=concat([\mathbf{e}_1,\cdots,x_j,\cdots])\)
+Cross network的第l层输出为:
+\(\mathbf{x}_{l+1} = \mathbf{x}_0 * \mathbf{x}_l^T * \mathbf{w} + \mathbf{x}_0 + \mathbf{b}\)
+其中, $\mathbf{x}_{l+1}$,$\mathbf{x}_l$,$\mathbf{x}_0$维度相同。其计算过程如下图所示：</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-19-12-02.png" alt=""></p>
+
+<p>Cross的设计有如下特点：</p>
+<ul>
+  <li>有限高阶：叉乘阶数由网络深度决定，深度$l$对应最高$l+1$阶的叉乘</li>
+  <li>自动叉乘：Cross输出包含了原始特征从一阶（即本身）到$l+1$阶的所有叉乘组合，而模型参数量仅仅随输入维度成线性增长：$2\times d \times l$</li>
+  <li>参数共享：不同叉乘项对应的权重不同，但并非每个叉乘组合对应独立的权重（指数数量级）， 通过参数共享，Cross有效降低了参数量。此外，参数共享还使得模型有更强的泛化性和鲁棒性。</li>
+</ul>
+
+<h3 id="nfm">NFM</h3>
+<p>Neural Factorization Machines结构如下图所示，其核心点是Bi-Interaction Pooling 层。该层本质上还是FM，与传统FM不同的是，它并没有将最终结果压缩成一个标量，而是保持向量形式出入到随后的DNN中。Bi-Interaction Pooling 可表示为：
+\(F_{BI}(\mathbf{X})=\sum_{i=1}^{n-1}\sum_{j=i+1}^{n} \mathbf{e_i} \odot \mathbf{e_j}\)
+对比原始FM，这里主要区别就是求的Hadamard乘积而非内积。此外NFM论文还提到对embedding层用FM来训练初始化，可以显著提高训练效率和模型最终性能。
+<img src="/deeplearning/deepctr/images/2021-08-05-11-34-22.png" alt=""></p>
+
+<h3 id="autoint">AutoInt</h3>
+<p>AutotInt的核心网络如下图所示，即使用Multi-head self-attention 网络来学习特征之间的交互信息。其中，它对连续特征的处理方式就是通过一个映射矩阵，将连续特征映射到同embedding 向量相同的维度。</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-17-56-24.png" alt=""></p>
+
+<p>Interacting层是AutoInt的核心，它使用经典的 Multi-head Self-Attention 来构造组合特征，即 key-value attention 的实现方式，具体结构如下图所示。</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-18-04-33.png" alt=""></p>
+
+<p>每个Attention head 都对应着三个转换矩阵$\mathbf{W}<em>{query},\mathbf{W}</em>{key},\mathbf{W}<em>{value}\in R^{d’\times d}$,对于第 h 个 Attention head，当第 m 个嵌入向量$\mathbf{e}</em>{m}$作为query时，其对应输出$\tilde{\boldsymbol{e}}_{m}^{(h)}$为：</p>
+
+\[\begin{gathered}
+\alpha_{m, k}^{(h)}=\frac{\exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{k}\right)\right)}{\sum_{l=1}^{M} \exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{l}\right)\right)} \\
+\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{k}\right)=\left\langle\boldsymbol{W}_{Q u e r y}^{(h)} \boldsymbol{e}_{m}, \boldsymbol{W}_{K e y}^{(h)} \boldsymbol{e}_{k}&gt;\right. \\
+\tilde{\boldsymbol{e}}_{m}^{(h)}=\sum_{k=1}^{M} \alpha_{m, k}^{(h)}\left(\boldsymbol{W}_{\text {Value }}^{(h)} \boldsymbol{e}_{k}\right)
+\end{gathered}\]
+
+<p>上式中，$\phi(\cdot)$是可选的相似度计算函数，文中简单地选择向量内积。</p>
+
+<p>对第m个嵌入$\mathbf{e}<em>{m}$，作者简单拼接它在$\tilde{\boldsymbol{e}}</em>{m}^{(h)}$个Attention head的输出，然后引入标准的残差连接作为其最终输出$\mathbf{e}_{m}^{Res}$ ：</p>
+
+\[\begin{gathered}
+\tilde{\boldsymbol{e}}_{m}=\tilde{\boldsymbol{e}}_{m}^{(1)} \oplus \tilde{\boldsymbol{e}}_{m}^{(2)} \oplus \ldots \oplus \tilde{\boldsymbol{e}}_{m}^{(H)} \in \mathbb{R}^{d^{\prime} H} \\
+\boldsymbol{e}_{m}^{\text {Res }}=\operatorname{Relu}\left(\tilde{\boldsymbol{e}}_{m}+\boldsymbol{W}_{\text {Res }} * \boldsymbol{e}_{m}\right), \quad \boldsymbol{W}_{\text {Res }} \in \mathbb{R}^{d^{\prime} H * d}
+\end{gathered}\]
+
+<p>最终的预测输出为：</p>
+
+\[\hat{y}=\sigma\left(\boldsymbol{w}^{T}\left(\boldsymbol{e}_{1}^{\text {Res }} \oplus \boldsymbol{e}_{2}^{\text {Res }} \oplus \ldots \oplus \boldsymbol{e}_{M}^{\text {Res }}\right)+b\right)\]
+
+<p>其中 $\boldsymbol{w} \in \mathbb{R}^{d^{\prime} H M}$, $\sigma(\cdot)$ 表示sigmoid函数。 <strong>这里可以看到，每个特征embedding向量${1,\cdots,M}$有会基于Attention和残差网络的输出。</strong></p>
+
+<h3 id="xdeepfm">XDeepFM</h3>
+<p>XDeepFM的结构如下图所示，其核心点是CIN网络。</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-19-24-58.png" alt=""></p>
+
+<p>CIN的网络结构如下图所示，它的结构同Cross Network类似,即：
+\(\mathbf{X}^k = F( \mathbf{X}^{k-1}, \mathbf{X}^{0})\)
+其中, $\mathbf{X}^k \in R^{H_k \times D}$, $H_k$是示第k层的vector个数, $D$就是embedding factor。</p>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-19-31-54.png" alt=""></p>
+
+<p>这里$F$操作的定义是
+\(\boldsymbol{X}_{h, *}^{k}=\sum_{i=1}^{H_{k-1}} \sum_{j=1}^{m} \boldsymbol{W}_{i j}^{k, h}\left(\boldsymbol{X}_{i, *}^{k-1} \circ \boldsymbol{X}_{j, *}^{0}\right) \in \mathbb{R}^{1 * D}, \quad \text { where } 1 \leq h \leq H_{k}\tag{2}\)
+其中，其中$\boldsymbol{W}^{k, h}\in R^{H_{k-1} \times m}$表示第k层的第h个vector的权重矩阵, $\circ$ 表示Hadamard乘积，即逐元素乘。下图展示了这个计算过程。</p>
+<ul>
+  <li>首先采用类似外积的操作，获取中间结果$\boldsymbol{X}^k_{tmp}=\boldsymbol{X}^{k-1} \otimes  \boldsymbol{X}^{0}$。</li>
+  <li>通过权重矩阵$\boldsymbol{W}^{k, h}$，将$\boldsymbol{X}^k_{tmp}\in R^{H_{k-1}\times D \times m}$压缩到$\boldsymbol{X}^k_{h}\in R^{1\times D}$</li>
+  <li>将$H_k$个$\boldsymbol{X}^k_{h}$拼起来就得到$\boldsymbol{X}^k$</li>
+</ul>
+
+<p><img src="/deeplearning/deepctr/images/2021-08-04-19-38-55.png" alt=""></p>
+
+<p>最终,$\boldsymbol{X}^1,\cdots,\boldsymbol{X}^k$在$D$维上求sum 然后concat 起来，即为CIN的输出。</p>
+
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Black's Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Black's Blog</li>
+<li><a class="u-email" href="mailto:zhhwss@qq.com">zhhwss@qq.com</a></li>
+</ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+<ul class="social-media-list">
+<li><a href="https://github.com/zhhwss"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">zhhwss</span></a></li>
+<li><a href="https://www.twitter.com/zhhwss"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">zhhwss</span></a></li>
+</ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
