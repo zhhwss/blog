@@ -107,7 +107,7 @@ Cross的设计有如下特点：
 - 参数共享：不同叉乘项对应的权重不同，但并非每个叉乘组合对应独立的权重（指数数量级）， 通过参数共享，Cross有效降低了参数量。此外，参数共享还使得模型有更强的泛化性和鲁棒性。
 
 ### NFM
-Neural Factorization Machines结构如下图所示，其核心点是Bi-Interaction Pooling 层。该层本质上还是FM，与传统FM不同的是，它并灭有将最终结果压缩成一个标量，而是保持向量形式出入到随后的DNN中。Bi-Interaction Pooling 可表示为：
+Neural Factorization Machines结构如下图所示，其核心点是Bi-Interaction Pooling 层。该层本质上还是FM，与传统FM不同的是，它并没有将最终结果压缩成一个标量，而是保持向量形式出入到随后的DNN中。Bi-Interaction Pooling 可表示为：
 $$
     F_{BI}(\mathbf{X})=\sum_{i=1}^{n-1}\sum_{j=i+1}^{n} \mathbf{e_i} \odot \mathbf{e_j}
 $$
