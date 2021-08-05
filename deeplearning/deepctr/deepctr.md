@@ -14,10 +14,10 @@
   - [Embedding Vector](#embedding-vector)
   - [Wide & Deep](#wide--deep)
   - [DeepFM](#deepfm)
-  - [AutoInt](#autoint)
   - [DeepCross](#deepcross)
-  - [XDeepFM](#xdeepfm)
   - [NFM](#nfm)
+  - [AutoInt](#autoint)
+  - [XDeepFM](#xdeepfm)
 
 ## DeepCTR
 在DeepCTR模型通常应用于表数据场景，该场景通常由离散特征和连续特征组成。如下图所示，每一行表示一个样本，每一列表示特征。机器学习任务就是要根据特征x预测目标y。其中离散特征一般用one-hot encoding处理，连续特征用归一化处理。然而在实际应用中，例如CTR预测场景，离散特征可能包含了上百万的不同值，这也就导致了one-hot vector是高纬稀疏的，进而特征向量x也是高纬稀疏的。
@@ -84,6 +84,37 @@ $$
     \hat{y}=\sigma(y_{DNN} + y_{FM})
 $$
 
+### DeepCross
+DeepCross的网络结构如下图所示，核心点是左边分支的Cross network
+
+![](images/2021-08-04-19-08-32.png)
+
+首先
+$$
+    \mathbf{x}_0=concat([\mathbf{e}_1,\cdots,x_j,\cdots])
+$$
+Cross network的第l层输出为:
+$$
+    \mathbf{x}_{l+1} = \mathbf{x}_0 * \mathbf{x}_l^T * \mathbf{w} + \mathbf{x}_0 + \mathbf{b}
+$$
+其中, $\mathbf{x}_{l+1}$,$\mathbf{x}_l$,$\mathbf{x}_0$维度相同。其计算过程如下图所示：
+
+![](images/2021-08-04-19-12-02.png)
+
+Cross的设计有如下特点：
+- 有限高阶：叉乘阶数由网络深度决定，深度$l$对应最高$l+1$阶的叉乘
+- 自动叉乘：Cross输出包含了原始特征从一阶（即本身）到$l+1$阶的所有叉乘组合，而模型参数量仅仅随输入维度成线性增长：$2\times d \times l$
+- 参数共享：不同叉乘项对应的权重不同，但并非每个叉乘组合对应独立的权重（指数数量级）， 通过参数共享，Cross有效降低了参数量。此外，参数共享还使得模型有更强的泛化性和鲁棒性。
+
+### NFM
+Neural Factorization Machines结构如下图所示，其核心点是Bi-Interaction Pooling 层。该层本质上还是FM，与传统FM不同的是，它并灭有将最终结果压缩成一个标量，而是保持向量形式出入到随后的DNN中。Bi-Interaction Pooling 可表示为：
+$$
+    F_{BI}(\mathbf{X})=\sum_{i=1}^{n-1}\sum_{j=i+1}^{n} \mathbf{e_i} \odot \mathbf{e_j}
+$$
+对比原始FM，这里主要区别就是求的Hadamard乘积而非内积。此外NFM论文还提到对embedding层用FM来训练初始化，可以显著提高训练效率和模型最终性能。
+![](images/2021-08-05-11-34-22.png)
+
+
 ### AutoInt
 AutotInt的核心网络如下图所示，即使用Multi-head self-attention 网络来学习特征之间的交互信息。其中，它对连续特征的处理方式就是通过一个映射矩阵，将连续特征映射到同embedding 向量相同的维度。
 
@@ -122,28 +153,6 @@ $$
 
 其中 $\boldsymbol{w} \in \mathbb{R}^{d^{\prime} H M}$, $\sigma(\cdot)$ 表示sigmoid函数。 **这里可以看到，每个特征embedding向量$\{1,\cdots,M\}$有会基于Attention和残差网络的输出。**
 
-### DeepCross
-DeepCross的网络结构如下图所示，核心点是左边分支的Cross network
-
-![](images/2021-08-04-19-08-32.png)
-
-首先
-$$
-    \mathbf{x}_0=concat([\mathbf{e}_1,\cdots,x_j,\cdots])
-$$
-Cross network的第l层输出为:
-$$
-    \mathbf{x}_{l+1} = \mathbf{x}_0 * \mathbf{x}_l^T * \mathbf{w} + \mathbf{x}_0 + \mathbf{b}
-$$
-其中, $\mathbf{x}_{l+1}$,$\mathbf{x}_l$,$\mathbf{x}_0$维度相同。其计算过程如下图所示：
-
-![](images/2021-08-04-19-12-02.png)
-
-Cross的设计有如下特点：
-- 有限高阶：叉乘阶数由网络深度决定，深度$l$对应最高$l+1$阶的叉乘
-- 自动叉乘：Cross输出包含了原始特征从一阶（即本身）到$l+1$阶的所有叉乘组合，而模型参数量仅仅随输入维度成线性增长：$2\times d \times l$
-- 参数共享：不同叉乘项对应的权重不同，但并非每个叉乘组合对应独立的权重（指数数量级）， 通过参数共享，Cross有效降低了参数量。此外，参数共享还使得模型有更强的泛化性和鲁棒性。
-
 ### XDeepFM
 XDeepFM的结构如下图所示，其核心点是CIN网络。
 
@@ -170,10 +179,3 @@ $$
 
 最终,$\boldsymbol{X}^1,\cdots,\boldsymbol{X}^k$在$D$维上求sum 然后concat 起来，即为CIN的输出。
 
-### NFM
-Neural Factorization Machines结构如下图所示，其核心点是Bi-Interaction Pooling 层。该层本质上还是FM，与传统FM不同的是，它并灭有将最终结果压缩成一个标量，而是保持向量形式出入到随后的DNN中。Bi-Interaction Pooling 可表示为：
-$$
-    F_{BI}(\mathbf{X})=\sum_{i=1}^{n-1}\sum_{j=i+1}^{n} \mathbf{e_i} \odot \mathbf{e_j}
-$$
-对比原始FM，这里主要区别就是求的Hadamard乘积而非内积。此外NFM论文还提到对embedding层用FM来训练初始化，可以显著提高训练效率和模型最终性能。
-![](images/2021-08-05-11-34-22.png)
