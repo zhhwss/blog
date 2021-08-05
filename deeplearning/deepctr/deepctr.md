@@ -105,16 +105,20 @@ $$
 上式中，$\phi(\cdot)$是可选的相似度计算函数，文中简单地选择向量内积。
 
 对第m个嵌入$\mathbf{e}_{m}$，作者简单拼接它在$\tilde{\boldsymbol{e}}_{m}^{(h)}$个Attention head的输出，然后引入标准的残差连接作为其最终输出$\mathbf{e}_{m}^{Res}$ ：
+
 $$
 \begin{gathered}
 \tilde{\boldsymbol{e}}_{m}=\tilde{\boldsymbol{e}}_{m}^{(1)} \oplus \tilde{\boldsymbol{e}}_{m}^{(2)} \oplus \ldots \oplus \tilde{\boldsymbol{e}}_{m}^{(H)} \in \mathbb{R}^{d^{\prime} H} \\
 \boldsymbol{e}_{m}^{\text {Res }}=\operatorname{Relu}\left(\tilde{\boldsymbol{e}}_{m}+\boldsymbol{W}_{\text {Res }} * \boldsymbol{e}_{m}\right), \quad \boldsymbol{W}_{\text {Res }} \in \mathbb{R}^{d^{\prime} H * d}
 \end{gathered}
 $$
+
 最终的预测输出为：
+
 $$
 \hat{y}=\sigma\left(\boldsymbol{w}^{T}\left(\boldsymbol{e}_{1}^{\text {Res }} \oplus \boldsymbol{e}_{2}^{\text {Res }} \oplus \ldots \oplus \boldsymbol{e}_{M}^{\text {Res }}\right)+b\right)
 $$
+
 其中 $\boldsymbol{w} \in \mathbb{R}^{d^{\prime} H M}$, $\sigma(\cdot)$ 表示sigmoid函数。 **这里可以看到，每个特征embedding向量$\{1,\cdots,M\}$有会基于Attention和残差网络的输出。**
 
 ### DeepCross
