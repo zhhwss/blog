@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 <head>
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
     <script type="text/x-mathjax-config">
@@ -14,8 +18,9 @@
   - [Embedding Vector](#embedding-vector)
   - [Wide & Deep](#wide--deep)
   - [DeepFM](#deepfm)
-  - [AutoInt](#autoint)
   - [DeepCross](#deepcross)
+  - [NFM](#nfm)
+  - [AutoInt](#autoint)
   - [XDeepFM](#xdeepfm)
 
 ## DeepCTR
@@ -83,38 +88,6 @@ $$
     \hat{y}=\sigma(y_{DNN} + y_{FM})
 $$
 
-### AutoInt
-AutotInt的核心网络如下图所示，即使用Multi-head self-attention 网络来学习特征之间的交互信息。其中，它对连续特征的处理方式就是通过一个映射矩阵，将连续特征映射到同embedding 向量相同的维度。
-
-![](images/2021-08-04-17-56-24.png)
-
-Interacting层是AutoInt的核心，它使用经典的 Multi-head Self-Attention 来构造组合特征，即 key-value attention 的实现方式，具体结构如下图所示。
-
-![](images/2021-08-04-18-04-33.png)
-
-每个Attention head 都对应着三个转换矩阵$\mathbf{W}_{query}$,$\mathbf{W}_{key}$,$\mathbf{W}_{value}\in R^{d'\times d}$,对于第 h 个 Attention head，当第 m 个嵌入向量$\mathbf{e}_{m}$作为query时，其对应输出$\tilde{\boldsymbol{e}}_{m}^{(h)}$为：
-$$
-\begin{gathered}
-\alpha_{m, k}^{(h)}=\frac{\exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{k}\right)\right)}{\sum_{l=1}^{M} \exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{l}\right)\right)} \\
-\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{k}\right)=\left\langle\boldsymbol{W}_{Q u e r y}^{(h)} \boldsymbol{e}_{m}, \boldsymbol{W}_{K e y}^{(h)} \boldsymbol{e}_{k}>\right. \\
-\tilde{\boldsymbol{e}}_{m}^{(h)}=\sum_{k=1}^{M} \alpha_{m, k}^{(h)}\left(\boldsymbol{W}_{\text {Value }}^{(h)} \boldsymbol{e}_{k}\right)
-\end{gathered}
-$$
-上式中，$\phi(\cdot)$是可选的相似度计算函数，文中简单地选择向量内积。
-
-对第m个嵌入$\mathbf{e}_{m}$，作者简单拼接它在$\tilde{\boldsymbol{e}}_{m}^{(h)}$个Attention head的输出，然后引入标准的残差连接作为其最终输出$\mathbf{e}_{m}^{Res}$ ：
-$$
-\begin{gathered}
-\tilde{\boldsymbol{e}}_{m}=\tilde{\boldsymbol{e}}_{m}^{(1)} \oplus \tilde{\boldsymbol{e}}_{m}^{(2)} \oplus \ldots \oplus \tilde{\boldsymbol{e}}_{m}^{(H)} \in \mathbb{R}^{d^{\prime} H} \\
-\boldsymbol{e}_{m}^{\text {Res }}=\operatorname{Relu}\left(\tilde{\boldsymbol{e}}_{m}+\boldsymbol{W}_{\text {Res }} * \boldsymbol{e}_{m}\right), \quad \boldsymbol{W}_{\text {Res }} \in \mathbb{R}^{d^{\prime} H * d}
-\end{gathered}
-$$
-最终的预测输出为：
-$$
-\hat{y}=\sigma\left(\boldsymbol{w}^{T}\left(\boldsymbol{e}_{1}^{\text {Res }} \oplus \boldsymbol{e}_{2}^{\text {Res }} \oplus \ldots \oplus \boldsymbol{e}_{M}^{\text {Res }}\right)+b\right)
-$$
-其中 $\boldsymbol{w} \in \mathbb{R}^{d^{\prime} H M}$, $\sigma(\cdot)$ 表示sigmoid函数。 **这里可以看到，每个特征embedding向量$\{1,\cdots,M\}$有会基于Attention和残差网络的输出。**
-
 ### DeepCross
 DeepCross的网络结构如下图所示，核心点是左边分支的Cross network
 
@@ -136,6 +109,53 @@ Cross的设计有如下特点：
 - 有限高阶：叉乘阶数由网络深度决定，深度$l$对应最高$l+1$阶的叉乘
 - 自动叉乘：Cross输出包含了原始特征从一阶（即本身）到$l+1$阶的所有叉乘组合，而模型参数量仅仅随输入维度成线性增长：$2\times d \times l$
 - 参数共享：不同叉乘项对应的权重不同，但并非每个叉乘组合对应独立的权重（指数数量级）， 通过参数共享，Cross有效降低了参数量。此外，参数共享还使得模型有更强的泛化性和鲁棒性。
+
+### NFM
+Neural Factorization Machines结构如下图所示，其核心点是Bi-Interaction Pooling 层。该层本质上还是FM，与传统FM不同的是，它并没有将最终结果压缩成一个标量，而是保持向量形式出入到随后的DNN中。Bi-Interaction Pooling 可表示为：
+$$
+    F_{BI}(\mathbf{X})=\sum_{i=1}^{n-1}\sum_{j=i+1}^{n} \mathbf{e_i} \odot \mathbf{e_j}
+$$
+对比原始FM，这里主要区别就是求的Hadamard乘积而非内积。此外NFM论文还提到对embedding层用FM来训练初始化，可以显著提高训练效率和模型最终性能。
+![](images/2021-08-05-11-34-22.png)
+
+
+### AutoInt
+AutotInt的核心网络如下图所示，即使用Multi-head self-attention 网络来学习特征之间的交互信息。其中，它对连续特征的处理方式就是通过一个映射矩阵，将连续特征映射到同embedding 向量相同的维度。
+
+![](images/2021-08-04-17-56-24.png)
+
+Interacting层是AutoInt的核心，它使用经典的 Multi-head Self-Attention 来构造组合特征，即 key-value attention 的实现方式，具体结构如下图所示。
+
+![](images/2021-08-04-18-04-33.png)
+
+每个Attention head 都对应着三个转换矩阵$\mathbf{W}_{query},\mathbf{W}_{key},\mathbf{W}_{value}\in R^{d'\times d}$,对于第 h 个 Attention head，当第 m 个嵌入向量$\mathbf{e}_{m}$作为query时，其对应输出$\tilde{\boldsymbol{e}}_{m}^{(h)}$为：
+
+$$
+\begin{gathered}
+\alpha_{m, k}^{(h)}=\frac{\exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{k}\right)\right)}{\sum_{l=1}^{M} \exp \left(\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{l}\right)\right)} \\
+\phi^{(h)}\left(\boldsymbol{e}_{m}, \boldsymbol{e}_{k}\right)=\left\langle\boldsymbol{W}_{Q u e r y}^{(h)} \boldsymbol{e}_{m}, \boldsymbol{W}_{K e y}^{(h)} \boldsymbol{e}_{k}>\right. \\
+\tilde{\boldsymbol{e}}_{m}^{(h)}=\sum_{k=1}^{M} \alpha_{m, k}^{(h)}\left(\boldsymbol{W}_{\text {Value }}^{(h)} \boldsymbol{e}_{k}\right)
+\end{gathered}
+$$
+
+上式中，$\phi(\cdot)$是可选的相似度计算函数，文中简单地选择向量内积。
+
+对第m个嵌入$\mathbf{e}_{m}$，作者简单拼接它在$\tilde{\boldsymbol{e}}_{m}^{(h)}$个Attention head的输出，然后引入标准的残差连接作为其最终输出$\mathbf{e}_{m}^{Res}$ ：
+
+$$
+\begin{gathered}
+\tilde{\boldsymbol{e}}_{m}=\tilde{\boldsymbol{e}}_{m}^{(1)} \oplus \tilde{\boldsymbol{e}}_{m}^{(2)} \oplus \ldots \oplus \tilde{\boldsymbol{e}}_{m}^{(H)} \in \mathbb{R}^{d^{\prime} H} \\
+\boldsymbol{e}_{m}^{\text {Res }}=\operatorname{Relu}\left(\tilde{\boldsymbol{e}}_{m}+\boldsymbol{W}_{\text {Res }} * \boldsymbol{e}_{m}\right), \quad \boldsymbol{W}_{\text {Res }} \in \mathbb{R}^{d^{\prime} H * d}
+\end{gathered}
+$$
+
+最终的预测输出为：
+
+$$
+\hat{y}=\sigma\left(\boldsymbol{w}^{T}\left(\boldsymbol{e}_{1}^{\text {Res }} \oplus \boldsymbol{e}_{2}^{\text {Res }} \oplus \ldots \oplus \boldsymbol{e}_{M}^{\text {Res }}\right)+b\right)
+$$
+
+其中 $\boldsymbol{w} \in \mathbb{R}^{d^{\prime} H M}$, $\sigma(\cdot)$ 表示sigmoid函数。 **这里可以看到，每个特征embedding向量$\{1,\cdots,M\}$有会基于Attention和残差网络的输出。**
 
 ### XDeepFM
 XDeepFM的结构如下图所示，其核心点是CIN网络。
@@ -162,3 +182,4 @@ $$
 ![](images/2021-08-04-19-38-55.png)
 
 最终,$\boldsymbol{X}^1,\cdots,\boldsymbol{X}^k$在$D$维上求sum 然后concat 起来，即为CIN的输出。
+

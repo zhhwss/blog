@@ -1,1 +1,12 @@
+
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
+_posts
+.jekyll-cache/Jekyll
+404.html
+about.markdown
+Gemfile
+Gemfile.lock
 .DS_Store
