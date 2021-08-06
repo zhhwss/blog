@@ -13,6 +13,7 @@ layout: home
   * [树模型](./ml/tree.md)
   * [随机森林](./ml/rf.md)
   * [集成学习](./ml/ensemble.md)
+  * [泛化误差](./ml/error.md)
 * 深度学习
   * [Batch Normalization](./deeplearning/bn.md)
   * [Residual Network](./deeplearning/residualnet.md)
