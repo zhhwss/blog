@@ -16,6 +16,7 @@ layout: home
   * [泛化误差](./ml/error.md)
   * boosting算法
     * [GBDT](./ml/boosting/gbdt.md)
+    * [XGBoost](./ml/boosting/xgbt.md)
 * 深度学习
   * [Batch Normalization](./deeplearning/bn.md)
   * [Residual Network](./deeplearning/residualnet.md)
