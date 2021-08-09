@@ -1,3 +1,15 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+    	MathJax.Hub.Config({tex2jax: {
+             inlineMath: [['$','$']],
+             displayMath: [["\\(","\\)"],["\\[","\\]"]],
+             processEscapes: true
+           }
+         });
+    </script>
+</head>
+
 ## 用户行为模型
 
 理解用户是搜索排序中一个非常重要的问题，工业级的推荐系统一般需要大量的泛化特征来较好的表达用户。这些泛化特征可以分为两类：
@@ -54,3 +66,10 @@ $$
     f(V_i, V_{current})=W_1^Ttanh(W_2 V_i+ W_3 V_3)
 $$
 - 也可以构建一个小的MLP输入是$[V_i, V_{current}]$，输出是$V_i$的系数大小。
+
+### DIN
+DIN本质上是Attention方法的一种，其中构建了一个Activation Unit来学习
+$$
+    f(V_i, V_{current})\rightarrow\alpha_i
+$$
+![](images/2021-08-09-23-34-18.png)
