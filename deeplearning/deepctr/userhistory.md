@@ -297,3 +297,32 @@ $$
 最终将$\mathbf{U}^{I},\mathbf{U}^{H}$与其他特征（用户profile，item attributes）拼起来输入到DNN中。
 
 ### BST
+BST 即用Transformer 把 history以及当前item放到一起学习，如下图所示
+![](images/2021-08-11-22-08-26.png)
+
+### SIM
+通过对用户行为数据进行建模，证明了该方法对于CTR预估模型的有效性。典型地，基于attention的CTR模型，如DIN[20]和DIEN[19]设计了复杂的模型结构，并引入了attention机制，通过从用户行为序列中搜索有效的知识，利用不同候选项的输入来捕捉用户的不同兴趣。但在真实系统中，这些模型只能处理短期行为序列数据，其长度通常小于150。另一方面，长期的用户行为数据是有价值的，对用户的长期兴趣进行建模可以为用户带来更加多样化的推荐结果。似乎我们正处于两难境地：我们无法在现实世界的系统中用有效但复杂的方法处理有价值的终身（life-long）用户行为数据。
+
+为了应对这一挑战，阿里妈妈提出了一种新的建模范式，即基于搜索的兴趣模型（Search-based Interest Model，SIM）。SIM采用两阶段搜索策略，能够有效地处理长用户行为序列。
+- 通用搜索单元（GSU）：从life-long行为数据中粗略选出和当前item最相关的TopK
+- 精确搜索单元（ESU）：使用DIN等网络进一步学习所选出的item对最终预测的影响。
+![](images/2021-08-11-22-25-24.png)
+
+#### GSU
+GSU是为了挑选与当前Top-K相关的历史item，文中提出了两种方法，包括：
+$$
+r_{i}= \begin{cases}\operatorname{Sign}\left(C_{i}=C_{a}\right) & \text { hard }-\operatorname{search} \\ \left(W_{b} \mathbf{e}_{i}\right) \odot\left(W_{a} \mathbf{e}_{a}\right)^{T} & \text { soft }-\operatorname{search}\end{cases}
+$$
+- 第一种是直接挑选出同当前item Category相同的历史items。这些Category需要人工预先分好类
+- 第二种中$\mathbf{e}_{i}$和$\mathbf{e}_{a}$分别是需要计算的item和当前item的embedding，$W_{b}$和$W_a$是带学习的参数。
+
+根据$r_i$选出top-k的item，并行multi-head attention学出关于当前item的加权特征表示。
+**此外 shoft-time 的行为信息用DIEN、DIN等学习**
+
+得到了long-time、shoft-time的特征表示后，加上其他特征，就可以使用DNN预测当前的点击率。
+
+**需要注意的是，soft-search网络可以和ESU网络一起训练，他们共享embedding矩阵。可以把soft-search网络当成辅助网络，提高embedding的训练效率。**
+$$
+    Loss = \alpha Loss_{GSU} + \beta Loss_{ESU}
+$$
+
