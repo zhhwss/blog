@@ -181,3 +181,117 @@ $$
 ![](images/2021-08-10-15-31-18.png)
 
 ### DSIN
+* 根据相关的介绍，虽然目前绝大多数的CTR都是从用户历史行为数据中建模他们动态、兴趣特征。 但是大多数都停留到behavior sequence的阶段便不再分析下去了。
+* 虽然sessions和sequence性质上都是由多个behaviors组成。但是session是根据一定规则对sequence进行划分的结果。
+所以可以看到，图中上下两个方框其实是一样的内容，但上面是k个session组成，而下面只有一个sequence。
+![](images/2021-08-11-10-21-59.png)
+* session的划分规则
+根据用户的点击时间：前一个session最后一个behavior到后一个session第一个behavior的时间差大于等于30min [Grbovic and Cheng, 2018]。
+* 采用session而非单纯sequence的优势？
+  * 首先要强调一下，不论是sessions之间还是sequences之间，在目前考虑的CTR问题中他们都是有顺序的，这样做的目的也很直接：方便对用户时序的兴趣变化进行建模。
+  * 从sequence的角度我们可能会看到：
+  ![](images/2021-08-11-10-23-20.png)
+  * 但是如果从session的角度：
+  ![](images/2021-08-11-10-23-54.png)
+  * 从sequence的角度我们虽然能看到interest的变化过程，但是却忽视了这样两个事实： **1.同一个session内的行为高度同构 2. 不同sessions间的behavior异构**
+  * 基于这样的观察，作者构造了DSIN来更好地利用session处理CTR prediction task
+
+DSIN的框架如下图所示，它的核心Session Division Layer，Session Interest Extractor layer， Session Interest Interacting Layer， Session Interest Activating Layer。
+![](images/2021-08-11-10-28-15.png)
+
+#### Session Division Layer
+该层就是根据规则（间隔30分钟）将sequence S划分成sessions 第$k$个session：
+$$
+    \mathbf{Q}_k = \left[\mathbf{b}_1, \mathbf{b}_2, \cdots,\mathbf{b}_T \right]\in R^{T\times d}
+$$
+$T$是session内序列长度（固定长度），$d$是embedding size。因此，S被划分成了
+$$
+    \mathbf{Q}=[\mathbf{Q}_1, \mathbf{Q}_2, \cdots,\mathbf{Q}_K]
+$$
+
+#### Session Interest Extractor Layer
+该层本质上是一个Transformer
+##### 首先通过 bias encoding 在$\mathbf{Q}$中加入位置信息包括
+  - 属于第几个Session: $1\sim K$
+  - 属于Session中第几个Item$: 1\sim T$
+  - 属于单个vector的第几位: $1\sim d$
+
+Transfomer中原生的positional encoding方式为：
+$$
+\begin{gathered}
+P E(p o s, 2 i)=\sin \left(\frac{\text { pos }}{10000^{2 i / d_{\text {model }}}}\right) \\
+P E(\text { pos }, 2 i+1)=\cos \left(\frac{\text { pos }}{10000^{2 i / d_{\text {model }}}}\right)
+\end{gathered}
+$$
+其中, $\text { pos }\in [1, T]$表示vetor在session中的位置，$i \in [1, d_{\text {model }}//2], 2i, 2i+1$分表表示在一个embedding vector中位置。
+很明显，上式子没有加入当前属于第几个Session的信息。
+
+bias encoder的方式是
+$$
+    \begin{split}
+    &\mathbf{Q} = \mathbf{Q} + \mathbf{W^K}+\mathbf{W^T}+\mathbf{W^d}, \\
+    &\mathbf{Q} \in R^{K\times T \times d}, \mathbf{W}^K\in R^{K\times 1\times 1},  \mathbf{W}_T\in R^{1\times T\times 1},  \mathbf{W}_d\in R^{1\times 1\times d}
+     \end{split}
+$$
+这里，由于$\mathbf{Q}\text{同}\mathbf{W}^K,\mathbf{W^T},\mathbf{W^d}$形状不一样，在做加法时候会自动broadcast使之补齐。
+##### 然后是通过Multi-head self Attention
+第h个head的结果为:
+$$
+\begin{aligned}
+\operatorname{head}_{h} &=\operatorname{Attention}\left(\mathbf{Q}_{k} \mathbf{W}^{Qh}, \mathbf{Q}_{k} \mathbf{W}^{Kh}, \mathbf{Q}_{k} \mathbf{W}^{Vh}\right) \\
+&=\operatorname{softmax}\left(\frac{\mathbf{Q}_{k} \mathbf{W}^{Qh} \mathbf{W}^{{Kh}^{T}} \mathbf{Q}_{k}^{T}}{\sqrt{d_{model}}}\right) \mathbf{Q}_{k} \mathbf{W}^{Vh}
+\end{aligned}
+$$
+然后，可以对上述结果增加residual connect 和 layer normalization 
+$$
+    \begin{split}
+    head &= [head_1, head_2\cdots head_H] \\
+    \mathbf{I} &= LayerNormalization(head + Q_kW^Q)
+    \end{split}
+$$
+layer normalization 即对一个Layer中神经元输出做normalization, 它和BatchNormalization形式相似，不同之处是layer normalization指对当前样本下整个Layer做，而BatchNormalization是都一个神经元在一个Batch内做。
+然后将结果输入前反馈网络
+$$
+    \mathbf{I}^Q_k = FNN(\mathbf{I}\mathbf{W}^O)\in R^{T\times d}
+$$
+其中，Attention网络中H*att_size=d。最后对结果在$T$这个维度上取平均值
+$$
+    \mathbf{I}_k = Avg(\mathbf{I}^Q_k )\in R^{d}
+$$
+$\mathbf{I}_k$就是用户的第$k$个session interest。
+
+#### Session Interest Interacting Layer
+该层使用双向LSTM建模session之间的演变。
+$$
+\begin{aligned}
+\mathbf{i}_{t} &=\sigma\left(\mathbf{W}_{x i} \mathbf{I}_{t}+\mathbf{W}_{h i} \mathbf{h}_{t-1}+\mathbf{W}_{c i} \mathbf{c}_{t-1}+\mathbf{b}_{i}\right) \\
+\mathbf{f}_{t} &=\sigma\left(\mathbf{W}_{x f} \mathbf{I}_{t}+\mathbf{W}_{h f} \mathbf{h}_{t-1}+\mathbf{W}_{c f} \mathbf{c}_{t-1}+\mathbf{b}_{f}\right) \\
+\mathbf{c}_{t} &=\mathbf{f}_{t} \mathbf{c}_{t-1}+\mathbf{i}_{t} \tanh \left(\mathbf{W}_{x c} \mathbf{I}_{t}+\mathbf{W}_{h c} \mathbf{h}_{t-1}+\mathbf{b}_{c}\right) \\
+\mathbf{o}_{t} &=\sigma\left(\mathbf{W}_{x o} \mathbf{I}_{t}+\mathbf{W}_{h o} \mathbf{h}_{t-1}+\mathbf{W}_{c o} \mathbf{c}_{t}+\mathbf{b}_{o}\right) \\
+\mathbf{h}_{t} &=\mathbf{o}_{t} \tanh \left(\mathbf{c}_{t}\right)
+\end{aligned}
+$$
+其中$\sigma(\cdot)$是logistic函数，$\mathbf{i},\mathbf{f},\mathbf{o},\mathbf{c}$分别是输入门、忘记门、输出们和Cell向量，他们都与$\mathbf{I}_t$有同样的形状。
+在Bi-LSTM中，其中的hidden state为
+$$
+    \mathbf{H}_k = \mathbf{h}_{bk} \oplus  \mathbf{h}_{fk}
+$$
+![](images/2021-08-11-15-59-23.png)
+
+#### Session Interest Activating Layer
+这里分别对$\mathbf{I}_k$和$\mathbf{H}_k$加权求和：
+$$
+\begin{aligned}
+a_{k}^{I} &=\frac{\left.\exp \left(\mathbf{I}_{k} \mathbf{W}^{I} \mathbf{X}^{I}\right)\right)}{\sum_{k}^{K} \exp \left(\mathbf{I}_{k} \mathbf{W}^{I} \mathbf{X}^{I}\right)} \\
+\mathbf{U}^{I} &=\sum_{k}^{K} a_{k}^{I} \mathbf{I}_{k}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+a_{k}^{H} &=\frac{\left.\exp \left(\mathbf{H}_{k} \mathbf{W}^{H} \mathbf{X}^{I}\right)\right)}{\sum_{k}^{K} \exp \left(\mathbf{H}_{k} \mathbf{W}^{H} \mathbf{X}^{I}\right)} \\
+\mathbf{U}^{H} &=\sum_{k}^{K} a_{k}^{H} \mathbf{H}_{k}
+\end{aligned}
+$$
+其中$\mathbf{X}^{I}$是当前item的embedding vector
+
+最终将$\mathbf{U}^{I},\mathbf{U}^{H}$与其他特征（用户profile，item attributes）拼起来输入到DNN中。
