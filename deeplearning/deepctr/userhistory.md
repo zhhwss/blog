@@ -295,3 +295,5 @@ $$
 其中$\mathbf{X}^{I}$是当前item的embedding vector
 
 最终将$\mathbf{U}^{I},\mathbf{U}^{H}$与其他特征（用户profile，item attributes）拼起来输入到DNN中。
+
+### BST
