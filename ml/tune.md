@@ -27,6 +27,7 @@ Grid Search就是对超参数的组合进行枚举
 
 ### Random Search
 Random Search 即随机搜索超参数空间
+
 ![](images/2021-08-12-15-37-02.png)
 
 ### Bayesian Optimization
