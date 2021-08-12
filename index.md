@@ -22,6 +22,7 @@ layout: home
   * [Residual Network](./deeplearning/residualnet.md)
   * DeepCTR
     * [DeepCTR简介](./deeplearning/deepctr/deepctr.md)
+    * [UserBehavior](./deeplearning/deepctr/userhistory.md)
     * [NON](./deeplearning/deepctr/dsn.md)
 
 * [强化学习](./reinforcement/content.md)
