@@ -17,6 +17,7 @@ layout: home
   * boosting算法
     * [GBDT](./ml/boosting/gbdt.md)
     * [XGBoost](./ml/boosting/xgbt.md)
+  * [调参数算法](./ml/tune.md)
 * 深度学习
   * [Batch Normalization](./deeplearning/bn.md)
   * [Residual Network](./deeplearning/residualnet.md)
