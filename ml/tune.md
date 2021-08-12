@@ -62,12 +62,10 @@ k\left(X^{*}, X\right) & k\left(X^{*}, X^{*}\right)
 $$
 在已知部分点$(X, Y)$，目标是估计在未知点$X^*$上的值的分布。其中
 $$
-    f(X^*)\sim N(\mu(X^*|X,Y, k), \sigma^2(X^*|X,Y, k))
-$$
-$$
 \begin{aligned}
-&\mu(X^*|X,Y, k)=k\left(X^{*}, X\right) k(X, X)^{-1}(Y-\mu(X))+\mu\left(X^{*}\right) \\
-&\sigma^2(X^*|X,Y, k)=k\left(X^{*}, X^{*}\right)-k\left(X^{*}, X\right) k(X, X)^{-1} k\left(X, X^{*}\right)
+    & f(X^*)\sim N(\mu(X^*|X,Y, k), \sigma^2(X^*|X,Y, k)) \\
+    &\mu(X^*|X,Y, k)=k\left(X^{*}, X\right) k(X, X)^{-1}(Y-\mu(X))+\mu\left(X^{*}\right) \\
+    &\sigma^2(X^*|X,Y, k)=k\left(X^{*}, X^{*}\right)-k\left(X^{*}, X\right) k(X, X)^{-1} k\left(X, X^{*}\right)
 \end{aligned}
 $$
 在高斯过程中一般会有一个前提假设即每个点在没有其他条件下服从$\mu(X)=0,\sigma^2(X)=1$，因此上式可以被简化为：
