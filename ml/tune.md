@@ -60,7 +60,7 @@ k(X, X) & k\left(X, X^{*}\right) \\
 k\left(X^{*}, X\right) & k\left(X^{*}, X^{*}\right)
 \end{array}\right]\right)
 $$
-在已知部分点$(X, Y)$，目标是估计在未知点$X^*$上的值的分布。其中
+在已知部分点$(X, Y)$，目标是估计在未知点$X^{*}$上的值的分布。其中
 $$
 \begin{aligned}
     & f(X^*)\sim N(\mu(X^*|X,Y, k), \sigma^2(X^*|X,Y, k)) \\
