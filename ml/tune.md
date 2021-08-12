@@ -1,3 +1,15 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+    	MathJax.Hub.Config({tex2jax: {
+             inlineMath: [['$','$']],
+             displayMath: [["\\(","\\)"],["\\[","\\]"]],
+             processEscapes: true
+           }
+         });
+    </script>
+</head>
+
 ## 调参数(Tune)
 调参数大致可以分为两个大类：
 - **(Search Algorithm)** 根据已有结果，进一步搜索出更优的超参数，例如贝叶斯算法，根据已有配置及其对应结果，估算下一个最优配置点。
