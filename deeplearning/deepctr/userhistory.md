@@ -239,7 +239,7 @@ $$
 $$
 \begin{aligned}
 \operatorname{head}_{h} &=\operatorname{Attention}\left(\mathbf{Q}_{k} \mathbf{W}^{Qh}, \mathbf{Q}_{k} \mathbf{W}^{Kh}, \mathbf{Q}_{k} \mathbf{W}^{Vh}\right) \\
-&=\operatorname{softmax}\left(\frac{\mathbf{Q}_{k} \mathbf{W}^{Qh} \mathbf{W}^{{Kh}^{T}} \mathbf{Q}_{k}^{T}}{\sqrt{d_{model}}}\right) \mathbf{Q}_{k} \mathbf{W}^{Vh}
+&=\operatorname{softmax}\left(\frac{\mathbf{Q}_{k} \mathbf{W}^{Qh} \mathbf{W}^{Kh^T} \mathbf{Q}_{k}^{T}}{\sqrt{d_{model}}}\right) \mathbf{Q}_{k} \mathbf{W}^{Vh}
 \end{aligned}
 $$
 然后，可以对上述结果增加residual connect 和 layer normalization 
