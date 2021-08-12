@@ -48,6 +48,7 @@ BO假设$(X,Y)$是高斯过程，即
 - 在每个X点上， Y的取值是一个高斯分布$N(\mu(X), K(X,X))$
 - 不同的X点上，他们之间的相关性用kernel函数来表示，可以这么理解，靠得越近的点，他们之间的相关性越大。
 - 空间中多个点可以组成一个多元高斯分布, kernel函数表示他们之间的协方差，如下：
+
 $$
 \left[\begin{array}{c}
 Y \\
@@ -60,7 +61,9 @@ k(X, X) & k\left(X, X^{*}\right) \\
 k\left(X^{*}, X\right) & k\left(X^{*}, X^{*}\right)
 \end{array}\right]\right)
 $$
+
 在已知部分点$(X, Y)$，目标是估计在未知点$X^{*}$上的值的分布。其中
+
 $$
 \begin{aligned}
     & f(X^*)\sim N(\mu(X^*|X,Y, k), \sigma^2(X^*|X,Y, k)) \\
@@ -68,13 +71,16 @@ $$
     &\sigma^2(X^*|X,Y, k)=k\left(X^{*}, X^{*}\right)-k\left(X^{*}, X\right) k(X, X)^{-1} k\left(X, X^{*}\right)
 \end{aligned}
 $$
+
 在高斯过程中一般会有一个前提假设即每个点在没有其他条件下服从$\mu(X)=0,\sigma^2(X)=1$，因此上式可以被简化为：
+
 $$
 \begin{aligned}
 &\mu(X^*|X,Y, k)=k\left(X^{*}, X\right) k(X, X)^{-1}Y \\
 &\sigma^2(X^*|X,Y, k)=k\left(X^{*}, X^{*}\right)-k\left(X^{*}, X\right) k(X, X)^{-1} k\left(X, X^{*}\right)
 \end{aligned}\tag{1}
 $$
+
 根据上式，我们就可以得到未知$f(X^*)$高斯分布的均值和方差，如下图所示。
 ![](images/2021-08-12-16-27-36.png)
 
