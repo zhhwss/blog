@@ -27,6 +27,7 @@ layout: home
     * [NON](./deeplearning/deepctr/dsn.md)
 * 推荐系统
   * [召回模型](./recommend/recall.md)
+  * [召回模型指标](./recommend/recall_metric.md)
 
 * [强化学习](./reinforcement/content.md)
   * [Model-based和Model-free](./reinforcement/model_base_free.md)
