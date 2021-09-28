@@ -21,6 +21,7 @@ layout: home
 * 深度学习
   * [Batch Normalization](./deeplearning/bn.md)
   * [Residual Network](./deeplearning/residualnet.md)
+  * [LSTM](./deeplearning/lstm.md)
   * DeepCTR
     * [DeepCTR简介](./deeplearning/deepctr/deepctr.md)
     * [UserBehavior](./deeplearning/deepctr/userhistory.md)
