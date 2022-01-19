@@ -1,9 +1,0 @@
-markdown: kramdown
-title: Black's Blog
-theme: jekyll-theme-cayman
-# mathjax: true
-author:
-  name: Black Zhou
-# Where things are
-plugins:
-  - jekyll-spaceship

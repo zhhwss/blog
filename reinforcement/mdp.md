@@ -77,6 +77,11 @@ $$
 $$
 q_{\pi}(s,a)=R_s^a+\lambda\sum_{s'}P_{ss'}^a (\sum_{a'\in A}\pi(a'|s')q_{\pi}(s',a'))
 $$
+
+#### 图解释
+![](images/2022-01-19-14-55-28.png) ![](images/2022-01-19-14-55-46.png)
+![](images/2022-01-19-14-56-04.png) ![](images/2022-01-19-14-56-48.png)
+
 ### 最优状态值函数
 即所有策略$\pi$中值函数对应的最大值
 
@@ -91,3 +96,6 @@ $$v^*_{\pi}(s)=\max \limits_{a}R_s^a+\lambda\sum_{s'}P_{ss'}^a v_{\pi}(s') $$
 $$q^*_{\pi}(s,a)=R_s^a+\lambda\sum_{s'}P_{ss'}^a (\max \limits_{a'}q_{\pi}(s',a'))$$
 
 
+#### 图解释
+![](images/2022-01-19-14-57-54.png) ![](images/2022-01-19-14-58-21.png)
+![](images/2022-01-19-14-58-53.png) ![](images/2022-01-19-14-59-40.png)
