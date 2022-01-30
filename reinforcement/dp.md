@@ -90,7 +90,7 @@ while True:
         old_value = value.copy()
         for i in range(MAX_CARS + 1):
             for j in range(MAX_CARS + 1):
-                returns = expected_return([i,j], policy[i,j], value, True)
+                returns = expected_return([i,j], policy[i,j], old_value, True)
                 value[i,j] = returns
         max_value_change = abs(old_value - value).max()
         print('max value change {}'.format(max_value_change))
