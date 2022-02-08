@@ -75,3 +75,58 @@ def monte_carlo_on_policy(episodes):
 * TD error: $R_{t+1}+\gamma V\left(S_{t+1}\right)-V\left(S_{t}\right)$
 ![](images/2022-02-07-19-42-36.png)
 ![](images/2022-02-07-19-43-53.png)
+![](images/2022-02-07-19-48-27.png)
+![](images/2022-02-07-19-47-46.png)
+![](images/2022-02-07-19-48-50.png)
+![](images/2022-02-07-19-49-07.png)
+
+
+[Test Case: RandomWalk](../demos/reinforcement/random_walk.ipynb)
+```python
+# @values: current states value, will be updated if @batch is False
+# @alpha: step size
+# @batch: whether to update @values
+def temporal_difference(values, alpha=0.1, batch=False):
+    state = 3
+    trajectory = [state]
+    rewards = [0]
+    while True:
+        old_state = state
+        if np.random.binomial(1, 0.5) == ACTION_LEFT:
+            state -= 1
+        else:
+            state += 1
+        # Assume all rewards are 0
+        reward = 0
+        trajectory.append(state)
+        # TD update
+        if not batch:
+            values[old_state] += alpha * (reward + values[state] - values[old_state])
+        if state == 6 or state == 0:
+            break
+        rewards.append(reward)
+    return trajectory, rewards
+```
+
+* Bootstrapping: update involves an estimate
+  * MC does not bootstrap
+  * DP bootstraps
+  * TD bootstraps
+* Sampling: update samples an expectation
+  * MC samples
+  * DP does not sample
+  * TD samples
+
+
+
+### TD($\lambda$)
+
+#### n-step TD
+
+$\begin{array}{ccc}n=1 & (T D) & G_{t}^{(1)}=R_{t+1}+\gamma V\left(S_{t+1}\right) \\ n=2 & & G_{t}^{(2)}=R_{t+1}+\gamma R_{t+2}+\gamma^{2} V\left(S_{t+2}\right) \\ \vdots & & \vdots & \\ n=\infty & (M C) & G_{t}^{(\infty)} & =R_{t+1}+\gamma R_{t+2}+\ldots+\gamma^{T-1} R_{T}\end{array}$
+
+* Update function:
+
+$V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\alpha\left(G_{t}^{(n)}-V\left(S_{t}\right)\right)$
+
+[Test Case: LargeRandomWalk](../demos/reinforcement/TD_lambda.ipynb)
