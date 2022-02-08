@@ -130,3 +130,22 @@ $\begin{array}{ccc}n=1 & (T D) & G_{t}^{(1)}=R_{t+1}+\gamma V\left(S_{t+1}\right
 $V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\alpha\left(G_{t}^{(n)}-V\left(S_{t}\right)\right)$
 
 [Test Case: LargeRandomWalk](../demos/reinforcement/TD_lambda.ipynb)
+
+#### Forward-view
+* can only be computed from complete episodes
+$G_{t}^{\lambda}=(1-\lambda) \sum_{n=1}^{\infty} \lambda^{n-1} G_{t}^{(n)}$
+![](images/2022-02-08-14-26-28.png)
+
+#### Backward-view
+* Eligibility traces
+* Frequency heuristic: assign credit to most frequent states
+* Recency heuristic: assign credit to most recent states
+
+$E_{0}(s)=0$
+$E_{t}(s)=\gamma \lambda E_{t-1}(s)+\mathbf{1}\left(S_{t}=s\right)$
+$\delta_{t} =R_{t+1}+\gamma V\left(S_{t+1}\right)-V\left(S_{t}\right)$
+$V(s)  \leftarrow V(s)+\alpha \delta_{t} E_{t}(s)$
+![](images/2022-02-08-14-43-36.png)
+
+#### Relationship Between Forward and Backward TD
+* This is exactly equivalent to TD(0) update
