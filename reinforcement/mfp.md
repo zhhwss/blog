@@ -146,6 +146,54 @@ $E_{t}(s)=\gamma \lambda E_{t-1}(s)+\mathbf{1}\left(S_{t}=s\right)$
 $\delta_{t} =R_{t+1}+\gamma V\left(S_{t+1}\right)-V\left(S_{t}\right)$
 $V(s)  \leftarrow V(s)+\alpha \delta_{t} E_{t}(s)$
 ![](images/2022-02-08-14-43-36.png)
+```python
+
+import numpy as np
+
+state_values = np.zeros(n_states) # initial guess = 0 value
+eligibility = np.zeros(n_states)
+
+lamb = 0.95 # the lambda weighting factor
+state = env.reset() # start the environment, get the initial state
+# Run the algorithm for some episodes
+for t in range(n_steps):
+  # act according to policy
+  action = policy(state)
+  new_state, reward, done = env.step(action)
+  # Update eligibilities
+  eligibility *= lamb * gamma
+  eligibility[state] += 1.0
+
+  # get the td-error and update every state's value estimate
+  # according to their eligibilities.
+  td_error = reward + gamma * state_values[new_state] - state_values[state]
+  state_values = state_values + alpha * td_error * eligibility
+
+  if done:
+    state = env.reset()
+  else:
+    state = new_state
+
+```
 
 #### Relationship Between Forward and Backward TD
 * This is exactly equivalent to TD(0) update
+* for $\lambda=1$, The sum of offline updates is identical for forward-view and
+backward-view TD($\lambda$)， = MC error
+
+#### Offline and Online updates
+offline更新指的是等到一个Episode完成之后做一次更新，而不是每一步都更新，与之相反的是online更新。我们通过一个例子来说明其中的区别，假设一个Episode是：
+$$
+s, a_{1}, r_{1}, t, a_{2}, r_{1}, s, a_{2}, \ldots
+$$
+
+那么算法会对状态s更新两次，对t更新一次。如果是online的，第二次计算使用的是第一次的结果来更新：
+$$
+\begin{aligned}
+&V_{2}(s) \leftarrow \delta_{1}+V_{1}(s) \\
+&V_{3}(s) \leftarrow \delta_{2}+V_{2}(s)
+\end{aligned}
+$$
+这里的$\delta_{1}$会依赖于$V_{1}(s)$，$\delta_{2}$会依赖于$V_{2}(s)$。最终的效果是：
+$$V_{3}(s) \leftarrow \delta_{1} + \delta_{2}+V_{1}(s)$$
+而offline更新公式是一样的，但是$\delta_{1}$,$\delta_{2}$都只会依赖于$V_{1}(s)$.
