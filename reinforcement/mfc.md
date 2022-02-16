@@ -37,9 +37,40 @@ $$
 * GLIE Monte-Carlo Control
 ![](images/2022-02-15-23-12-05.png)
 
+[Test Case: Blackjack](../demos/reinforcement/blackjack.ipynb)
 ### On-Policy Temporal-Difference Learning
 #### Sarsa
 ![](images/2022-02-15-23-13-19.png)
+
+[Test Case: Clff Walk](../demos/reinforcement/cliff_walk.ipynb)
+```python
+def sarsa(q_value, expected=False, step_size=ALPHA):
+    state = START
+    action = choose_action(state, q_value)
+    rewards = 0.0
+    while state != GOAL:
+        next_state, reward = step(state, action)
+        next_action = choose_action(next_state, q_value)
+        rewards += reward
+        if not expected:
+            target = q_value[next_state[0], next_state[1], next_action]
+        else:
+            # calculate the expected value of new state
+            target = 0.0
+            q_next = q_value[next_state[0], next_state[1], :]
+            best_actions = np.argwhere(q_next == np.max(q_next))
+            for action_ in ACTIONS:
+                if action_ in best_actions:
+                    target += ((1.0 - EPSILON) / len(best_actions) + EPSILON / len(ACTIONS)) * q_value[next_state[0], next_state[1], action_]
+                else:
+                    target += EPSILON / len(ACTIONS) * q_value[next_state[0], next_state[1], action_]
+        target *= GAMMA
+        q_value[state[0], state[1], action] += step_size * (
+                reward + target - q_value[state[0], state[1], action])
+        state = next_state
+        action = next_action
+    return rewards
+```
 
 #### n-Step Sarsa
 ![](images/2022-02-15-23-14-29.png)
@@ -102,6 +133,23 @@ $$
 * Next action is chosen using behaviour policy $A_{t+1} \sim\mu(\cdot|S_t )$
 * But we consider alternative successor action $A' \sim\pi(\cdot|S_t )$
 ![](images/2022-02-15-23-28-30.png)
+
+[Test Case: Clff Walk](../demos/reinforcement/cliff_walk.ipynb)
+```python
+def q_learning(q_value, step_size=ALPHA):
+    state = START
+    rewards = 0.0
+    while state != GOAL:
+        action = choose_action(state, q_value)
+        next_state, reward = step(state, action)
+        rewards += reward
+        # Q-Learning update
+        q_value[state[0], state[1], action] += step_size * (
+                reward + GAMMA * np.max(q_value[next_state[0], next_state[1], :]) -
+                q_value[state[0], state[1], action])
+        state = next_state
+    return rewards
+```
 
 ### Summary
 ![](images/2022-02-15-23-32-14.png)
